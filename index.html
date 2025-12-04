@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telecom Pre-Sales Nexus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            pastel: {
+              blue: '#789DBC',
+              pink: '#FFE3E3',
+              cream: '#FEF9F2',
+              green: '#C9E9D2',
+            },
+            charcoal: {
+              900: '#222831', // Main Background
+              800: '#393E46', // Surface
+              brand: '#00ADB5', // Accent
+              50: '#EEEEEE',  // Text
+              700: '#4F5661', // Border/lighter surface helper
+            },
+            slate: {
+              850: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
