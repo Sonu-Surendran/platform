@@ -1,0 +1,81 @@
+@startuml Application Use Case Diagram
+
+skinparam PROCESSED_BY_PLANTUML true
+skinparam HANDWRITTEN false
+skinparam SHADOWING true
+skinparam ROUND_CORNER 10
+
+skinparam USECASE_BACKGROUND_COLOR #FFF9C4
+skinparam USECASE_BORDER_COLOR #FBC02D
+skinparam ACTOR_BACKGROUND_COLOR #E1F5FE
+skinparam ACTOR_BORDER_COLOR #0277BD
+
+' Request: Gold Groups (Packages)
+skinparam PACKAGE_BACKGROUND_COLOR #FFFDF0
+skinparam PACKAGE_BORDER_COLOR #FFD700
+skinparam PACKAGE_FONT_COLOR #000000
+
+' Request: Blue Arrows
+skinparam ARROW_COLOR #1E88E5
+skinparam ARROW_FONT_COLOR #1E88E5
+
+left to right direction
+actor "User" as user
+
+package "Network Management Application" {
+
+    package "Dashboard" {
+        usecase "View Overview Metrics" as UC1
+        usecase "View Alerts & SLA" as UC2
+    }
+
+    package "Deals Management" {
+        usecase "Create New Deal" as UC3
+        usecase "Update Deal Status" as UC4
+        usecase "Manage Deal Notes" as UC5
+    }
+
+    package "Circuit Inventory" {
+        usecase "Search Inventory" as UC6
+        usecase "Filter by Carrier/Location" as UC7
+        usecase "Export Inventory CSV" as UC8
+        usecase "View Circuit Details" as UC9
+    }
+
+    package "Analytics" {
+        usecase "Visualize Spend by Country" as UC10
+        usecase "View Carrier Share" as UC11
+        usecase "Forecast Financials" as UC12
+    }
+
+    package "MIC POM" {
+        usecase "Upload Bills/Contracts" as UC13
+        usecase "View Document History" as UC14
+    }
+
+    package "Matrix Comparison" {
+        usecase "Import Vendor Quotes" as UC15
+        usecase "Scan & Normalize Data" as UC16
+        usecase "Compare Pricing" as UC17
+    }
+}
+
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC4
+user --> UC5
+user --> UC6
+user --> UC7
+user --> UC8
+user --> UC9
+user --> UC10
+user --> UC11
+user --> UC12
+user --> UC13
+user --> UC14
+user --> UC15
+user --> UC16
+user --> UC17
+
+@enduml

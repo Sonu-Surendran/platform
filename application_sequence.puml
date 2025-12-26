@@ -1,0 +1,172 @@
+@startuml Application Sequence Diagram
+
+skinparam PROCESSED_BY_PLANTUML true
+skinparam SEQUENCE_ARROW_COLOR #1E88E5
+skinparam SEQUENCE_ARROW_FONT_COLOR #1E88E5
+skinparam SEQUENCE_LIFE_LINE_BORDER_COLOR #2C3E50
+skinparam SEQUENCE_LIFE_LINE_BACKGROUND_COLOR #FFFFFF
+skinparam PARTICIPANT_BORDER_THICKNESS 1.5
+
+skinparam ROUND_CORNER 10
+skinparam SHADOWING true
+
+' Group Colors (Alt, Loop, Par)
+skinparam SEQUENCE_GROUP_BORDER_COLOR #FFD700
+skinparam SEQUENCE_GROUP_HEADER_FONT_COLOR #000000
+skinparam SEQUENCE_GROUP_BODY_BACKGROUND_COLOR #FFFDF0
+skinparam SEQUENCE_GROUP_BORDER_THICKNESS 1.5
+
+actor "User" as user #E0E0E0
+participant "Frontend (React)" as fe #29B6F6
+participant "Backend (FastAPI)" as be #AB47BC
+database "Redis Cache" as cache #FFA726
+database "PostgreSQL DB" as db #66BB6A
+
+title MIC APPLICATION SEQUENCE DIAGRAM
+
+== Dashboard Module ==
+user -[#1E88E5]> fe : Open Dashboard
+activate fe
+fe -[#1E88E5]> be : GET /deals (Fetch Overview metrics)
+activate be
+be -[#1E88E5]> cache : GET "deals_all"
+activate cache
+alt Cache Hit
+    cache --[#00C853]> be : JSON Data
+else Cache Miss
+    cache --[#D32F2F]> be : null
+    be -[#1E88E5]> db : SELECT * FROM deals
+    activate db
+    db --[#00C853]> be : Deals Records
+    be -[#1E88E5]> db : SELECT * FROM notes
+    db --[#00C853]> be : Notes Records
+    deactivate db
+    be -[#1E88E5]> cache : SET "deals_all"
+end
+deactivate cache
+be --[#00C853]> fe : Deals Data
+deactivate be
+fe -[#1E88E5]> fe : Compute Metrics (Revenue, Pipeline, SLA)
+fe --[#00C853]> user : Display Dashboard Diagrams
+deactivate fe
+
+== Deals Management Module ==
+user -[#1E88E5]> fe : Navigate to Deals Management
+activate fe
+fe -[#1E88E5]> be : GET /deals
+activate be
+be -[#1E88E5]> cache : GET "deals_all"
+activate cache
+cache --[#00C853]> be : (Cached Data)
+deactivate cache
+be --[#00C853]> fe : Deals List
+deactivate be
+
+group Create New Deal
+    user -[#1E88E5]> fe : Click "New Deal" -> Submit Form
+    fe -[#1E88E5]> be : POST /deals
+    activate be
+    be -[#1E88E5]> db : INSERT INTO deals
+    activate db
+    db --[#00C853]> be : Success
+    deactivate db
+    be -[#1E88E5]> cache : DELETE "deals_all" (Invalidate)
+    activate cache
+    cache --[#00C853]> be : OK
+    deactivate cache
+    be --[#00C853]> fe : Success
+    deactivate be
+    fe -[#1E88E5]> fe : Trigger Re-fetch (GET /deals)
+end
+deactivate fe
+
+== Analytics & Reports Module ==
+user -[#1E88E5]> fe : Open Analytics Tab
+activate fe
+par Fetch Data Sources
+    fe -[#1E88E5]> be : GET /deals
+    activate be
+    be -[#1E88E5]> cache : GET "deals_all"
+    cache --[#00C853]> be : Data
+    be --[#00C853]> fe : Deals Data
+    deactivate be
+else
+    fe -[#1E88E5]> be : GET /circuits
+    activate be
+    be -[#1E88E5]> cache : GET "circuits_all"
+    activate cache
+    alt Cache Hit
+        cache --[#00C853]> be : JSON Data
+    else Cache Miss
+        cache --[#D32F2F]> be : null
+        be -[#1E88E5]> db : SELECT * FROM circuits
+        activate db
+        db --[#00C853]> be : Circuits Records
+        deactivate db
+        be -[#1E88E5]> cache : SET "circuits_all"
+    end
+    deactivate cache
+    be --[#00C853]> fe : Circuits Data
+    deactivate be
+end
+
+fe -[#1E88E5]> fe : Aggregate Data (Spend by Country, Top Carriers)
+fe --[#00C853]> user : Display Charts & Tables
+deactivate fe
+
+== Circuit Inventory Module ==
+user -[#1E88E5]> fe : Open Circuit Inventory
+activate fe
+fe -[#1E88E5]> be : GET /circuits
+activate be
+be -[#1E88E5]> cache : GET "circuits_all"
+activate cache
+cache --[#00C853]> be : (Cached Data)
+deactivate cache
+be --[#00C853]> fe : Circuits List
+deactivate be
+fe --[#00C853]> user : Display Inventory Table
+deactivate fe
+
+== MIC POM Module ==
+user -[#1E88E5]> fe : Open MIC POM
+activate fe
+fe -[#1E88E5]> be : GET /mic-pom
+activate be
+be -[#1E88E5]> cache : GET "mic_pom_all"
+activate cache
+alt Cache Hit
+    cache --[#00C853]> be : JSON Data
+else Cache Miss
+    cache --[#D32F2F]> be : null
+    be -[#1E88E5]> db : SELECT * FROM mic_pom_records
+    activate db
+    db --[#00C853]> be : POM Records
+    deactivate db
+    be -[#1E88E5]> cache : SET "mic_pom_all"
+end
+deactivate cache
+be --[#00C853]> fe : POM Records
+deactivate be
+fe --[#00C853]> user : Display POM Table
+deactivate fe
+
+== Matrix Comparison Module ==
+user -[#1E88E5]> fe : Open Matrix Comparison
+activate fe
+note right of fe : This module operates primarily Client-Side
+user -[#1E88E5]> fe : Import Excel / Paste Data
+fe -[#1E88E5]> fe : Parse Data (ExcelJS)
+fe -[#1E88E5]> fe : Render Grid (Canvas/Table)
+user -[#1E88E5]> fe : Run "Scan Matrix"
+fe -[#1E88E5]> fe : Algorithm: Normalize Currency over Grid
+fe -[#1E88E5]> fe : Algorithm: Determine Preferred Carrier
+fe --[#00C853]> user : Display Comparison Results
+group Under Development
+    fe -[#1E88E5]> be : Push scan excel data for record-keeping
+    activate be
+    be -[#1E88E5]> db : INSERT INTO circuit_inventory Table
+    activate db
+deactivate fe
+
+@enduml

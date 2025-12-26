@@ -1,0 +1,159 @@
+/* Root styles and CSS variables */
+:root {
+  --color-pastel-blue: #789DBC;
+  --color-pastel-pink: #FFE3E3;
+  --color-pastel-cream: #FEF9F2;
+  --color-pastel-green: #C9E9D2;
+  --color-charcoal-900: #222831;
+  --color-charcoal-800: #393E46;
+  --color-charcoal-brand: #00ADB5;
+  --color-charcoal-50: #EEEEEE;
+  --color-charcoal-700: #4F5661;
+}
+
+/* Global box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Root and HTML setup */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-pastel-cream);
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+body.dark {
+  background-color: var(--color-charcoal-900);
+  color: var(--color-charcoal-50);
+}
+
+/* Root element */
+#root {
+  display: contents;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-700);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-charcoal-brand);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-width: thin;
+}
+
+.dark * {
+  scrollbar-color: var(--color-charcoal-700) transparent;
+}
+
+/* Input focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--color-charcoal-brand);
+  outline-offset: 2px;
+}
+
+/* Date input styling */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  cursor: pointer;
+}
+
+/* Placeholder text styling */
+::placeholder {
+  color: #cbd5e1;
+  opacity: 1;
+}
+
+.dark ::placeholder {
+  color: var(--color-charcoal-700);
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--color-charcoal-brand);
+  color: white;
+}
+
+.dark ::selection {
+  background-color: var(--color-charcoal-brand);
+  color: var(--color-charcoal-900);
+}
+
+/* Button reset styles */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+}
+
+/* Link reset styles */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Transition utilities */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+}

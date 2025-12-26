@@ -1,22 +1,32 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  BarChart3, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  BarChart3,
+  Settings,
   Cable,
   Table2,
   FileText
 } from 'lucide-react';
 import { SidebarItemType } from '@/types';
+import { PacManGame } from '@/components/EasterEgg/PacManGame';
+import { useState } from 'react';
 
 interface SidebarProps {
   activeItem: SidebarItemType;
   setActiveItem: (item: SidebarItemType) => void;
+  isOpen?: boolean;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) => {
-  
+export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem, isOpen = true }) => {
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (e.detail === 3) {
+      setShowEasterEgg(true);
+    }
+  };
+
   const menuItems = [
     { type: SidebarItemType.DASHBOARD, icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
     { type: SidebarItemType.CIRCUIT_INVENTORY, icon: <Cable size={20} />, label: 'Circuit Inventory' },
@@ -28,13 +38,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) =
   ];
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-slate-900 dark:bg-charcoal-900 text-white transition-colors duration-300 border-r border-transparent dark:border-charcoal-800">
+    <aside className={`fixed left-0 top-0 z-40 h-screen w-64 bg-slate-900 dark:bg-charcoal-900 text-white transition-all duration-300 border-r border-transparent dark:border-charcoal-800 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Logo Area */}
-      <div className="flex h-20 items-center gap-3 px-6 border-b border-slate-800 dark:border-charcoal-800">
+      <div
+        className="flex h-20 items-center gap-3 px-6 border-b border-slate-800 dark:border-charcoal-800 cursor-pointer select-none"
+        onClick={handleLogoClick}
+      >
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-lg shadow-blue-900/30 overflow-hidden p-1.5">
-          <img 
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/NTT_Data_logo.svg/512px-NTT_Data_logo.svg.png" 
-            alt="NTT Data" 
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/NTT_Data_logo.svg/512px-NTT_Data_logo.svg.png"
+            alt="NTT Data"
             className="w-full h-full object-contain"
           />
         </div>
@@ -43,6 +56,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) =
           <p className="text-xs text-slate-400 dark:text-charcoal-50 opacity-60">MIC PLATFORM</p>
         </div>
       </div>
+
+      {showEasterEgg && <PacManGame onClose={() => setShowEasterEgg(false)} />}
 
       {/* Navigation */}
       <nav className="mt-8 px-4 space-y-2">
@@ -53,8 +68,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) =
               key={item.type}
               onClick={() => setActiveItem(item.type)}
               className={`group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 
-                ${isActive 
-                  ? 'bg-pastel-blue dark:bg-charcoal-brand text-white shadow-lg shadow-blue-900/50 dark:shadow-cyan-900/30' 
+                ${isActive
+                  ? 'bg-pastel-blue dark:bg-charcoal-brand text-white shadow-lg shadow-blue-900/50 dark:shadow-cyan-900/30'
                   : 'text-slate-400 dark:text-gray-400 hover:bg-slate-800 dark:hover:bg-charcoal-800 hover:text-white dark:hover:text-charcoal-50'
                 }`}
             >
@@ -73,9 +88,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) =
       {/* User Profile Snippet */}
       <div className="absolute bottom-8 left-0 w-full px-6">
         <div className="flex items-center gap-3 rounded-2xl bg-slate-800/50 dark:bg-charcoal-800/50 p-3 backdrop-blur-sm border border-slate-700/50 dark:border-charcoal-800">
-          <img 
-            src="https://picsum.photos/40/40" 
-            alt="User" 
+          <img
+            src="https://picsum.photos/40/40"
+            alt="User"
             className="h-10 w-10 rounded-full border-2 border-slate-600 dark:border-charcoal-700 object-cover"
           />
           <div className="overflow-hidden">
@@ -84,6 +99,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) =
           </div>
         </div>
       </div>
-    </aside>
+    </aside >
   );
 };
