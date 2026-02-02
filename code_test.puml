@@ -1,0 +1,49 @@
+usecaseDiagram
+    %% Vibrant Styles
+    classDef userActor fill:#FF9900,stroke:#333,stroke-width:2px,color:white;
+    classDef adminActor fill:#D9534F,stroke:#333,stroke-width:2px,color:white;
+    classDef backend fill:#5BC0DE,stroke:#333,stroke-width:2px,color:white;
+    classDef db fill:#5CB85C,stroke:#333,stroke-width:2px,color:white;
+    classDef uc fill:#428BCA,stroke:#333,stroke-width:1px,color:white;
+    %% Actors
+    actor User as "Sales / Solution Architect"
+    actor Admin as "System Admin"
+    %% Backend & Data Components (Represented as System Actors)
+    actor API as "FastAPI Backend"
+    actor DB as "PostgreSQL"
+    actor Cache as "Redis Cloud"
+    actor Storage as "Blob Storage"
+    package "MIC Platform UI" {
+        usecase "View Dashboard Insights" as UC1
+        usecase "Manage Circuit Inventory" as UC2
+        usecase "Compare Vendor Matrices" as UC3
+        usecase "Manage Deals (CRUD)" as UC4
+        usecase "Upload Bills & Contracts (POM)" as UC5
+        usecase "System Configuration" as UC6
+    }
+    %% User Interactions
+    User --> UC1
+    User --> UC2
+    User --> UC3
+    User --> UC4
+    User --> UC5
+    
+    Admin --> UC1
+    Admin --> UC6
+    Admin --> UC2
+    %% Backend Flows (How the UI connects to logic)
+    UC1 -.-> API : "Fetch KPIs & Stats"
+    UC2 -.-> API : "Search & Update"
+    UC3 -.-> API : "Process Comparison"
+    UC4 -.-> API : "Sync Deal Data"
+    UC5 -.-> API : "Upload File Stream"
+    %% Data Layer Flows
+    API ==> DB : "Persist / Query Data"
+    API ==> Cache : "Cache-Aside Read/Write"
+    API ==> Storage : "Save PDF Documents"
+    %% Apply Colors
+    class User userActor;
+    class Admin adminActor;
+    class API backend;
+    class DB,Cache,Storage db;
+    class UC1,UC2,UC3,UC4,UC5,UC6 uc;

@@ -122,7 +122,14 @@ activate be
 be -[#1E88E5]> cache : GET "circuits_all"
 activate cache
 cache --[#00C853]> be : (Cached Data)
-deactivate cache
+group Cache Miss
+    cache --[#D32F2F]> be : (Cache miss - fetch from DB)
+    be -[#1E88E5]> db : SELECT * FROM circuits records
+    activate db
+    db --[#00C853]> be : Circuits Records
+    deactivate db
+    deactivate cache
+end
 be --[#00C853]> fe : Circuits List
 deactivate be
 fe --[#00C853]> user : Display Inventory Table
@@ -167,6 +174,7 @@ group Under Development
     activate be
     be -[#1E88E5]> db : INSERT INTO circuit_inventory Table
     activate db
+end
 deactivate fe
 
 @enduml

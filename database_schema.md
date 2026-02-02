@@ -214,9 +214,8 @@ CREATE INDEX idx_pom_customer ON mic_pom_records (customer_name);
 CREATE INDEX idx_pom_circuit_id ON mic_pom_records (circuit_id);
 ```
 
-### 2.5 Optional: Users Table (Future Proofing)
 
-While not explicitly in the current types, you may want a users table for authentication in the future.
+### 2.5 Users and Permissions
 
 ```sql
 CREATE TABLE users (
@@ -226,5 +225,42 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(50) DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE permissions (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    resource VARCHAR(50) NOT NULL, -- e.g., 'DASBOARD', 'DEALS', 'CIRCUIT_INVENTORY'
+    access_level VARCHAR(20) NOT NULL, -- 'VIEW', 'EDIT'
+    UNIQUE(user_id, resource)
+);
+```
+
+
+### 2.6 Matrix Scan History
+
+Stores historical results of matrix comparisons.
+
+```sql
+CREATE TABLE scan_sessions (
+    id VARCHAR(50) PRIMARY KEY,
+    scan_name VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_sites INT,
+    total_mrc DECIMAL(15, 2)
+);
+
+CREATE TABLE scan_results (
+    id VARCHAR(50) PRIMARY KEY,
+    session_id VARCHAR(50) REFERENCES scan_sessions(id) ON DELETE CASCADE,
+    client_site_id VARCHAR(255),
+    address TEXT,
+    city VARCHAR(100),
+    country VARCHAR(100),
+    winning_carrier VARCHAR(255),
+    winning_mrc DECIMAL(15, 2),
+    winning_nrc DECIMAL(15, 2),
+    currency VARCHAR(10),
+    term INT
 );
 ```
